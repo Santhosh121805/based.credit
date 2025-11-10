@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Wallet } from "lucide-react";
+import { useConnect } from 'wagmi';
+import { injected, walletConnect, coinbaseWallet } from 'wagmi/connectors';
+import { toast } from "sonner";
 
 interface WalletModalProps {
   open: boolean;
@@ -11,20 +14,47 @@ interface WalletModalProps {
 
 export const WalletModal = ({ open, onOpenChange }: WalletModalProps) => {
   const navigate = useNavigate();
+  const { connect, connectors } = useConnect();
 
   const wallets = [
-    { name: "MetaMask", icon: "🦊" },
-    { name: "WalletConnect", icon: "🔗" },
-    { name: "Coinbase", icon: "💼" },
-    { name: "Rainbow", icon: "🌈" },
+    { 
+      name: "MetaMask", 
+      icon: "🦊",
+      connector: connectors.find(c => c.id === 'injected')
+    },
+    { 
+      name: "WalletConnect", 
+      icon: "🔗",
+      connector: connectors.find(c => c.id === 'walletConnect')
+    },
+    { 
+      name: "Coinbase", 
+      icon: "💼",
+      connector: connectors.find(c => c.id === 'coinbaseWallet')
+    },
+    { 
+      name: "Rainbow", 
+      icon: "🌈",
+      connector: connectors.find(c => c.id === 'injected')
+    },
   ];
 
-  const handleConnect = (walletName: string) => {
-    // Simulate wallet connection
-    setTimeout(() => {
-      onOpenChange(false);
-      navigate("/dashboard");
-    }, 1500);
+  const handleConnect = (connector: any) => {
+    if (!connector) {
+      toast.error("Wallet not available");
+      return;
+    }
+    
+    connect({ connector }, {
+      onSuccess: () => {
+        toast.success("Wallet connected successfully!");
+        onOpenChange(false);
+        navigate("/dashboard");
+      },
+      onError: (error) => {
+        toast.error(`Connection failed: ${error.message}`);
+      }
+    });
   };
 
   return (
@@ -48,7 +78,7 @@ export const WalletModal = ({ open, onOpenChange }: WalletModalProps) => {
               <Button
                 variant="glass"
                 className="w-full justify-start text-lg h-16 hover:glow-green transition-all"
-                onClick={() => handleConnect(wallet.name)}
+                onClick={() => handleConnect(wallet.connector)}
               >
                 <span className="text-2xl mr-4">{wallet.icon}</span>
                 {wallet.name}

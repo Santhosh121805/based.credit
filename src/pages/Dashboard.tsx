@@ -14,8 +14,18 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
+import { useAccount, useBalance, useBlockNumber } from 'wagmi';
+import { mainnet } from 'wagmi/chains';
+import { formatEther } from 'viem';
 
 export default function Dashboard() {
+  const { address, isConnected } = useAccount();
+  const { data: balance } = useBalance({
+    address: address,
+    chainId: mainnet.id,
+  });
+  const { data: blockNumber } = useBlockNumber({ watch: true });
+  
   const [score, setScore] = useState(0);
   const [isAnalyzing, setIsAnalyzing] = useState(true);
 
@@ -128,7 +138,10 @@ export default function Dashboard() {
               <div>
                 <div className="font-bold text-lg">AI Agent Analyzing Your Wallet...</div>
                 <div className="text-sm text-muted-foreground">
-                  Scanning 8,524 transactions across 3 chains
+                  Connected: {address?.slice(0, 6)}...{address?.slice(-4)}
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  Balance: {balance ? parseFloat(formatEther(balance.value)).toFixed(4) : '0.0000'} ETH
                 </div>
               </div>
             </div>
@@ -173,8 +186,9 @@ export default function Dashboard() {
                   <span className="font-bold">Low Risk</span>
                 </div>
                 <div className="space-y-2 text-sm">
+                  <div className="text-muted-foreground">Wallet: <span className="text-foreground font-bold">{address?.slice(0, 6)}...{address?.slice(-4)}</span></div>
+                  <div className="text-muted-foreground">Balance: <span className="text-foreground font-bold">{balance ? parseFloat(formatEther(balance.value)).toFixed(4) : '0.0000'} ETH</span></div>
                   <div className="text-muted-foreground">DeFi Trust: <span className="text-foreground font-bold">94%</span></div>
-                  <div className="text-muted-foreground">Wallet Age: <span className="text-foreground font-bold">847 days</span></div>
                   <div className="text-muted-foreground">Trust Rate: <span className="text-foreground font-bold">99%</span></div>
                 </div>
               </div>
