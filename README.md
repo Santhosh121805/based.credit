@@ -1,6 +1,4 @@
-Here's the complete content for your README.md file to paste directly:
 
-```markdown
 # 🏦 Trust AI Weave - Decentralized Credit Scoring Platform
 
 [![Live Demo](https://img.shields.io/badge/🌐%20Live%20Demo-Vercel-brightgreen)](https://trust-ai-weave-bdlo2kxci-ssanthoshs418-gmailcoms-projects.vercel.app)
