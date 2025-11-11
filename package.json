@@ -1,8 +1,10 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "trust-ai-weave",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Trust AI Weave - Decentralized Credit Scoring Platform",
   "type": "module",
+  "homepage": "https://github.com/Santhosh121805/based.credit",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

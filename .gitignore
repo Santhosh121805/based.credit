@@ -39,3 +39,4 @@ deployments/*/.env.*
 *.njsproj
 *.sln
 *.sw?
+.vercel
