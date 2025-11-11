@@ -2,10 +2,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Wallet } from "lucide-react";
-import { useConnect } from 'wagmi';
-import { injected, walletConnect, coinbaseWallet } from 'wagmi/connectors';
+import { Wallet, Loader2 } from "lucide-react";
+import { useConnect, useAccount, type Connector } from 'wagmi';
 import { toast } from "sonner";
+import { useState } from "react";
 
 interface WalletModalProps {
   open: boolean;
@@ -14,47 +14,50 @@ interface WalletModalProps {
 
 export const WalletModal = ({ open, onOpenChange }: WalletModalProps) => {
   const navigate = useNavigate();
-  const { connect, connectors } = useConnect();
+  const { connect, connectors, isPending } = useConnect();
+  const { isConnected } = useAccount();
+  const [connectingWallet, setConnectingWallet] = useState<string | null>(null);
 
   const wallets = [
     { 
       name: "MetaMask", 
       icon: "🦊",
-      connector: connectors.find(c => c.id === 'injected')
+      connector: connectors.find(c => c.id === 'injected'),
+      description: "Connect using MetaMask browser extension"
     },
     { 
       name: "WalletConnect", 
       icon: "🔗",
-      connector: connectors.find(c => c.id === 'walletConnect')
+      connector: connectors.find(c => c.id === 'walletConnect'),
+      description: "Scan QR code with your mobile wallet"
     },
     { 
-      name: "Coinbase", 
+      name: "Coinbase Wallet", 
       icon: "💼",
-      connector: connectors.find(c => c.id === 'coinbaseWallet')
-    },
-    { 
-      name: "Rainbow", 
-      icon: "🌈",
-      connector: connectors.find(c => c.id === 'injected')
+      connector: connectors.find(c => c.id === 'coinbaseWallet'),
+      description: "Connect using Coinbase Wallet"
     },
   ];
 
-  const handleConnect = (connector: any) => {
+  const handleConnect = async (connector: Connector | undefined, walletName: string) => {
     if (!connector) {
       toast.error("Wallet not available");
       return;
     }
     
-    connect({ connector }, {
-      onSuccess: () => {
-        toast.success("Wallet connected successfully!");
-        onOpenChange(false);
-        navigate("/dashboard");
-      },
-      onError: (error) => {
-        toast.error(`Connection failed: ${error.message}`);
-      }
-    });
+    setConnectingWallet(walletName);
+    
+    try {
+      await connect({ connector });
+      toast.success(`${walletName} connected successfully!`);
+      onOpenChange(false);
+      navigate("/dashboard");
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      toast.error(`Connection failed: ${errorMessage}`);
+    } finally {
+      setConnectingWallet(null);
+    }
   };
 
   return (
@@ -77,11 +80,20 @@ export const WalletModal = ({ open, onOpenChange }: WalletModalProps) => {
             >
               <Button
                 variant="glass"
-                className="w-full justify-start text-lg h-16 hover:glow-green transition-all"
-                onClick={() => handleConnect(wallet.connector)}
+                className="w-full justify-start text-lg h-20 hover:glow-green transition-all relative"
+                onClick={() => handleConnect(wallet.connector, wallet.name)}
+                disabled={isPending || connectingWallet === wallet.name}
               >
-                <span className="text-2xl mr-4">{wallet.icon}</span>
-                {wallet.name}
+                <div className="flex items-center justify-start w-full">
+                  <span className="text-2xl mr-4">{wallet.icon}</span>
+                  <div className="text-left">
+                    <div className="font-semibold">{wallet.name}</div>
+                    <div className="text-xs text-muted-foreground">{wallet.description}</div>
+                  </div>
+                  {connectingWallet === wallet.name && (
+                    <Loader2 className="w-4 h-4 animate-spin ml-auto" />
+                  )}
+                </div>
               </Button>
             </motion.div>
           ))}

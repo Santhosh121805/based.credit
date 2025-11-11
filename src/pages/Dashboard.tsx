@@ -17,9 +17,11 @@ import { useEffect, useState } from "react";
 import { useAccount, useBalance, useBlockNumber } from 'wagmi';
 import { mainnet } from 'wagmi/chains';
 import { formatEther } from 'viem';
+import { useUser } from "@/hooks/useUser";
 
 export default function Dashboard() {
   const { address, isConnected } = useAccount();
+  const { user, isRegistered } = useUser();
   const { data: balance } = useBalance({
     address: address,
     chainId: mainnet.id,
@@ -136,8 +138,16 @@ export default function Dashboard() {
                 <Sparkles className="w-6 h-6 text-neon-green" />
               </motion.div>
               <div>
-                <div className="font-bold text-lg">AI Agent Analyzing Your Wallet...</div>
+                <div className="font-bold text-lg">
+                  {isRegistered && user ? 
+                    `AI Agent Analyzing ${user.name}'s Wallet...` : 
+                    "AI Agent Analyzing Your Wallet..."
+                  }
+                </div>
                 <div className="text-sm text-muted-foreground">
+                  {isRegistered && user && (
+                    <>Account: {user.name} • </>
+                  )}
                   Connected: {address?.slice(0, 6)}...{address?.slice(-4)}
                 </div>
                 <div className="text-xs text-muted-foreground">

@@ -1,14 +1,36 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAccount, useDisconnect } from 'wagmi';
-import { LogOut } from "lucide-react";
+import { LogOut, User } from "lucide-react";
+import { toast } from "sonner";
+import { useState } from "react";
+import { RegisterModal } from "./RegisterModal";
+import { useUser } from "@/hooks/useUser";
 
 export const Header = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { address, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
-  const isDashboard = location.pathname === '/dashboard';
+  const { user, isRegistered, register } = useUser();
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+
+  const handleDisconnect = () => {
+    disconnect(undefined, {
+      onSuccess: () => {
+        toast.success("Wallet disconnected successfully!");
+        navigate("/");
+      },
+      onError: (error) => {
+        toast.error(`Disconnect failed: ${error.message}`);
+      }
+    });
+  };
+
+  const handleRegister = (userData: { name: string }) => {
+    register(userData);
+  };
 
   return (
     <motion.header
@@ -44,18 +66,30 @@ export const Header = () => {
           </nav>
 
           <div className="flex items-center gap-4">
-            {isConnected && isDashboard ? (
+            {isConnected ? (
               <>
+                {/* Show user name if registered */}
+                {isRegistered && user && (
+                  <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-full glass-panel">
+                    <User className="w-4 h-4 text-neon-green" />
+                    <span className="text-sm font-medium">
+                      {user.name}
+                    </span>
+                  </div>
+                )}
+                
+                {/* Show wallet address */}
                 <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-full glass-panel">
                   <div className="w-2 h-2 rounded-full bg-neon-green animate-pulse" />
                   <span className="text-sm font-mono">
                     {address?.slice(0, 6)}...{address?.slice(-4)}
                   </span>
                 </div>
+                
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  onClick={() => disconnect()}
+                  onClick={handleDisconnect}
                   className="gap-2"
                 >
                   <LogOut className="w-4 h-4" />
@@ -64,9 +98,20 @@ export const Header = () => {
               </>
             ) : (
               <>
-                <Button variant="ghost" className="hidden md:inline-flex">
-                  Register
-                </Button>
+                {isRegistered && user ? (
+                  <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-full glass-panel">
+                    <User className="w-4 h-4 text-neon-green" />
+                    <span className="text-sm font-medium">Welcome, {user.name}</span>
+                  </div>
+                ) : (
+                  <Button 
+                    variant="ghost" 
+                    className="hidden md:inline-flex"
+                    onClick={() => setShowRegisterModal(true)}
+                  >
+                    Register
+                  </Button>
+                )}
                 <Button variant="hero">
                   It's free
                 </Button>
@@ -75,6 +120,12 @@ export const Header = () => {
           </div>
         </div>
       </div>
+      
+      <RegisterModal
+        open={showRegisterModal}
+        onOpenChange={setShowRegisterModal}
+        onRegister={handleRegister}
+      />
     </motion.header>
   );
 };

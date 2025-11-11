@@ -65,24 +65,24 @@ export const Hero = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
               >
-                <div className="text-3xl font-bold text-neon-green">12,847</div>
-                <div className="text-sm text-muted-foreground">Wallets Scored</div>
+                <div className="text-3xl font-bold text-neon-green">Instant</div>
+                <div className="text-sm text-muted-foreground">Credit Scoring</div>
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
               >
-                <div className="text-3xl font-bold text-neon-cyan">$2.5M</div>
-                <div className="text-sm text-muted-foreground">Loans Issued</div>
+                <div className="text-3xl font-bold text-neon-cyan">Zero</div>
+                <div className="text-sm text-muted-foreground">Collateral Needed</div>
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
               >
-                <div className="text-3xl font-bold text-neon-green">0.8%</div>
-                <div className="text-sm text-muted-foreground">Default Rate</div>
+                <div className="text-3xl font-bold text-neon-green">Trusted</div>
+                <div className="text-sm text-muted-foreground">By Thousands</div>
               </motion.div>
             </div>
           </motion.div>
@@ -109,10 +109,10 @@ export const Hero = () => {
                 className="absolute w-80 h-64 glass-panel rounded-3xl p-8 transform rotate-6"
                 style={{ boxShadow: "0 25px 50px -12px rgba(214, 255, 0, 0.25)" }}
               >
-                <div className="text-sm text-muted-foreground mb-2">Traitor Swift</div>
-                <div className="text-4xl font-bold text-neon-green mb-4">1.0x</div>
+                <div className="text-sm text-muted-foreground mb-2">New Borrower</div>
+                <div className="text-4xl font-bold text-neon-green mb-4">650</div>
                 <div className="text-xs text-muted-foreground">
-                  Consequat nisl et nulla egestas.
+                  Building credit history with smart AI insights.
                 </div>
               </motion.div>
 
@@ -130,10 +130,10 @@ export const Hero = () => {
                 className="absolute w-80 h-64 bg-gradient-to-br from-card to-glass-bg rounded-3xl p-8 transform -rotate-3"
                 style={{ boxShadow: "0 25px 50px -12px rgba(0, 224, 255, 0.25)" }}
               >
-                <div className="text-sm text-muted-foreground mb-2">Traitor Swift</div>
-                <div className="text-4xl font-bold text-neon-cyan mb-4">2.5x</div>
+                <div className="text-sm text-muted-foreground mb-2">Trusted Member</div>
+                <div className="text-4xl font-bold text-neon-cyan mb-4">825</div>
                 <div className="text-xs text-muted-foreground">
-                  Lorem ipsum dolor sit amet consectetur.
+                  Verified DeFi history and lending reputation.
                 </div>
                 <Button variant="hero" className="mt-6">
                   Get Started <ArrowRight className="ml-2 w-4 h-4" />
@@ -153,10 +153,10 @@ export const Hero = () => {
                 className="absolute w-80 h-64 bg-gradient-to-br from-neon-green to-neon-cyan rounded-3xl p-8 transform rotate-1 top-32"
                 style={{ boxShadow: "0 25px 50px -12px rgba(214, 255, 0, 0.4)" }}
               >
-                <div className="text-sm text-background/70 mb-2">Traitor Swift</div>
-                <div className="text-4xl font-bold text-background mb-4">3.0x</div>
+                <div className="text-sm text-background/70 mb-2">Elite Borrower</div>
+                <div className="text-4xl font-bold text-background mb-4">950</div>
                 <div className="text-xs text-background/70">
-                  Risus ullamcorper fermentum massa.
+                  Premium credit score unlocks top-tier rates.
                 </div>
               </motion.div>
             </div>
@@ -171,11 +171,11 @@ export const Hero = () => {
           className="mt-24 pt-12 border-t border-glass-border"
         >
           <div className="flex items-center justify-between opacity-40">
-            <div className="text-2xl font-bold">Ohms</div>
-            <div className="text-2xl font-bold">.inc</div>
-            <div className="text-2xl font-bold">GREEN</div>
-            <div className="text-2xl font-bold">NROK</div>
-            <div className="text-2xl font-bold">CWBANK</div>
+            <div className="text-2xl font-bold">Compound</div>
+            <div className="text-2xl font-bold">AAVE</div>
+            <div className="text-2xl font-bold">UniSwap</div>
+            <div className="text-2xl font-bold">Ethereum</div>
+            <div className="text-2xl font-bold">Polygon</div>
           </div>
         </motion.div>
       </div>
